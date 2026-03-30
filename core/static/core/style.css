@@ -15,7 +15,7 @@
 
 body {
   margin: 0;
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: var(--body-font, "Plus Jakarta Sans", sans-serif);
   color: var(--text);
   background:
     radial-gradient(circle at top left, var(--theme-color) 0%, transparent 35%),
@@ -95,9 +95,9 @@ body {
 }
 
 .page-shell {
-  max-width: 1120px;
+  max-width: 1420px;
   margin: 0 auto;
-  padding: 48px 20px 64px;
+  padding: 48px 28px 72px;
 }
 
 .intro {
@@ -145,13 +145,14 @@ body {
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 28px;
+  margin-bottom: 28px;
 }
 
 .card {
-  min-height: 260px;
-  padding: 22px;
+  min-height: 340px;
+  padding: 28px;
   border-radius: 28px;
   border: 1px solid var(--border);
   background:
@@ -166,37 +167,57 @@ body {
 .card-header {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 18px;
+  min-height: 148px;
 }
 
 .card-index {
   margin: 0;
-  min-width: 50px;
+  min-width: 64px;
   font-family: "Cormorant Garamond", serif;
-  font-size: 2rem;
+  font-size: 2.3rem;
   line-height: 1;
   color: var(--accent);
+  padding-top: 10px;
+}
+
+.card-identity {
+  display: grid;
+  grid-template-rows: minmax(34px, auto) minmax(78px, auto);
+  gap: 14px;
+  width: 100%;
 }
 
 .card h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 2.2rem;
+  line-height: 1.05;
 }
 
 .card-fullname {
-  margin: 6px 0 0;
+  margin: 0;
   color: var(--muted);
-  line-height: 1.6;
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.card-nickname {
+  margin: 0;
+  color: var(--text);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.05;
 }
 
 .card-details {
-  margin: 26px 0 0;
+  margin: 34px 0 0;
   display: grid;
-  gap: 14px;
+  gap: 18px;
 }
 
 .card-details div {
-  padding-top: 14px;
+  padding-top: 18px;
   border-top: 1px solid rgba(15, 23, 42, 0.08);
 }
 
@@ -211,16 +232,25 @@ body {
 
 .card-details dd {
   margin: 0;
-  line-height: 1.7;
+  font-size: 1.08rem;
+  line-height: 1.75;
 }
 
 .theme-form {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   padding: 6px 8px 6px 14px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
+}
+
+.theme-form-panel {
+  padding: 14px 16px;
+  border-radius: 28px;
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.18);
 }
 
 .theme-form label {
@@ -236,6 +266,34 @@ body {
   border-radius: 50%;
   background: transparent;
   cursor: pointer;
+}
+
+.theme-form select {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #111827;
+  font: inherit;
+}
+
+.access-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.editor-panel {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .user-name {
@@ -258,10 +316,42 @@ body {
   }
 
   .page-shell {
-    padding-top: 32px;
+    padding: 32px 18px 56px;
   }
 
   .intro h1 {
     line-height: 1.04;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .card {
+    min-height: auto;
+    padding: 24px;
+  }
+
+  .card-header {
+    min-height: auto;
+  }
+
+  .card h2 {
+    font-size: 1.7rem;
+  }
+
+  .card-identity {
+    grid-template-rows: auto auto;
+    gap: 8px;
+  }
+
+  .editor-panel {
+    justify-content: stretch;
+  }
+
+  .theme-form-panel {
+    border-radius: 24px;
+    width: 100%;
   }
 }

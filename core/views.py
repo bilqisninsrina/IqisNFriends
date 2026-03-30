@@ -6,6 +6,8 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
+from .models import SiteAppearance
+
 
 BIODATA_LIST = [
     {
@@ -35,6 +37,21 @@ BIODATA_LIST = [
 ]
 
 DEFAULT_THEME = "#f3f4f6"
+DEFAULT_FONT = "jakarta"
+FONT_CHOICES = {
+    "jakarta": {
+        "label": "Plus Jakarta Sans",
+        "body": '"Plus Jakarta Sans", sans-serif',
+    },
+    "manrope": {
+        "label": "Manrope",
+        "body": '"Manrope", sans-serif',
+    },
+    "instrument": {
+        "label": "Instrument Sans",
+        "body": '"Instrument Sans", sans-serif',
+    },
+}
 
 
 def google_oauth_ready() -> bool:
@@ -47,11 +64,29 @@ def google_oauth_ready() -> bool:
         return False
 
 
+def is_editor(request: HttpRequest) -> bool:
+    if not request.user.is_authenticated:
+        return False
+
+    user_email = (getattr(request.user, "email", "") or "").strip().lower()
+    return user_email in settings.GROUP_EDITOR_EMAILS
+
+
 @require_http_methods(["GET", "POST"])
 def home(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST" and request.user.is_authenticated:
+    appearance = SiteAppearance.load()
+    can_customize = is_editor(request)
+
+    if request.method == "POST" and can_customize:
         theme_color = request.POST.get("theme_color", DEFAULT_THEME)
-        request.session["theme_color"] = theme_color
+        font_choice = request.POST.get("font_choice", DEFAULT_FONT)
+
+        if font_choice not in FONT_CHOICES:
+            font_choice = DEFAULT_FONT
+
+        appearance.theme_color = theme_color
+        appearance.font_choice = font_choice
+        appearance.save(update_fields=["theme_color", "font_choice", "updated_at"])
         return redirect("home")
 
     return render(
@@ -59,13 +94,20 @@ def home(request: HttpRequest) -> HttpResponse:
         "core/home.html",
         {
             "biodata_list": BIODATA_LIST,
-            "theme_color": request.session.get("theme_color", DEFAULT_THEME),
+            "theme_color": appearance.theme_color,
+            "font_choice": appearance.font_choice,
+            "font_family": FONT_CHOICES.get(appearance.font_choice, FONT_CHOICES[DEFAULT_FONT])["body"],
+            "font_choices": [
+                {"value": key, "label": option["label"]}
+                for key, option in FONT_CHOICES.items()
+            ],
             "google_oauth_ready": google_oauth_ready(),
+            "can_customize": can_customize,
+            "editor_emails": sorted(settings.GROUP_EDITOR_EMAILS),
         },
     )
 
 
 def logout_view(request: HttpRequest) -> HttpResponse:
     logout(request)
-    request.session.pop("theme_color", None)
     return redirect("home")

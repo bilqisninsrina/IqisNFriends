@@ -81,6 +81,12 @@ SITE_ID = 1
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '').strip()
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET', '').strip()
 GOOGLE_OAUTH_CONFIGURED = bool(GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET)
+GROUP_EDITOR_EMAILS = {
+    'bilqismulyadi07@gmail.com',
+    'annisa.fakhira17@gmail.com',
+    'nadila1971@gmail.com',
+    'rinduaurellia6@gmail.com',
+}
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

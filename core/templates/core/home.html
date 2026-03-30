@@ -8,24 +8,18 @@
   <title>IqisNFriends</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'core/style.css' %}">
 </head>
-<body style="--theme-color: {{ theme_color }};">
+<body style="--theme-color: {{ theme_color }}; --body-font: {{ font_family }};">
   <nav class="navbar">
     <div class="brand-wrap">
       <div class="brand">IqisNFriends</div>
-      <p class="brand-subtitle"></p>
     </div>
     <div class="nav-right">
       {% if user.is_authenticated %}
-        <form method="post" class="theme-form">
-          {% csrf_token %}
-          <label for="theme_color">Accent</label>
-          <input id="theme_color" name="theme_color" type="color" value="{{ theme_color }}">
-          <button type="submit">Simpan</button>
-        </form>
         <span class="user-name">{{ user.get_full_name|default:user.email|default:user.username }}</span>
+        <span class="access-chip">{% if can_customize %}Editor{% else %}View only{% endif %}</span>
         <a href="{% url 'logout' %}" class="btn">Logout</a>
       {% else %}
         {% if google_oauth_ready %}
@@ -55,8 +49,8 @@
         <article class="card">
           <div class="card-header">
             <p class="card-index">0{{ forloop.counter }}</p>
-            <div>
-              <h2>{{ biodata.nama_panggilan }}</h2>
+            <div class="card-identity">
+              <h2 class="card-nickname">{{ biodata.nama_panggilan }}</h2>
               <p class="card-fullname">{{ biodata.nama_panjang }}</p>
             </div>
           </div>
@@ -74,6 +68,23 @@
         </article>
       {% endfor %}
     </section>
+
+    {% if can_customize %}
+      <section class="editor-panel">
+        <form method="post" class="theme-form theme-form-panel">
+          {% csrf_token %}
+          <label for="theme_color">Accent</label>
+          <input id="theme_color" name="theme_color" type="color" value="{{ theme_color }}">
+          <label for="font_choice">Font</label>
+          <select id="font_choice" name="font_choice">
+            {% for font in font_choices %}
+              <option value="{{ font.value }}" {% if font.value == font_choice %}selected{% endif %}>{{ font.label }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit">Simpan</button>
+        </form>
+      </section>
+    {% endif %}
   </main>
 </body>
 </html>

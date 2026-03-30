@@ -1,43 +1,76 @@
 {% load static %}
 {% load socialaccount %}
 <!doctype html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IqisNFriends</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'core/style.css' %}">
 </head>
 <body style="--theme-color: {{ theme_color }};">
   <nav class="navbar">
-    <div class="brand">IqisNFriends</div>
+    <div class="brand-wrap">
+      <div class="brand">IqisNFriends</div>
+      <p class="brand-subtitle"></p>
+    </div>
     <div class="nav-right">
       {% if user.is_authenticated %}
         <form method="post" class="theme-form">
           {% csrf_token %}
-          <label for="theme_color">Warna:</label>
+          <label for="theme_color">Accent</label>
           <input id="theme_color" name="theme_color" type="color" value="{{ theme_color }}">
           <button type="submit">Simpan</button>
         </form>
         <span class="user-name">{{ user.get_full_name|default:user.email|default:user.username }}</span>
         <a href="{% url 'logout' %}" class="btn">Logout</a>
       {% else %}
-        <a href="{% provider_login_url 'google' %}" class="btn">Login</a>
+        {% if google_oauth_ready %}
+          <a href="{% provider_login_url 'google' %}" class="btn btn-google">Login with Google</a>
+        {% else %}
+          <button type="button" class="btn btn-disabled" disabled>Google belum aktif</button>
+        {% endif %}
       {% endif %}
     </div>
   </nav>
 
-  <main>
+  <main class="page-shell">
+    <section class="intro">
+      <p class="eyebrow">Friend Directory</p>
+      <h1>Biodata Anggota Kelompok</h1>
+    </section>
+
+    {% if not user.is_authenticated and not google_oauth_ready %}
+      <section class="notice">
+        Google OAuth belum dikonfigurasi. Isi <code>GOOGLE_CLIENT_ID</code> dan
+        <code>GOOGLE_CLIENT_SECRET</code> di file <code>.env</code>.
+      </section>
+    {% endif %}
+
     <section class="cards">
       {% for biodata in biodata_list %}
-        <article class="card {% if not user.is_authenticated %}guest{% endif %}">
-          <p><strong>Nama Panjang:</strong> {{ biodata.nama_panjang }}</p>
-          <p><strong>Nama Panggilan:</strong> {{ biodata.nama_panggilan }}</p>
-          <p><strong>Tempat, Tanggal Lahir:</strong> {{ biodata.ttl }}</p>
-          <p><strong>Domisili:</strong> {{ biodata.domisili }}</p>
-          {% if not user.is_authenticated %}
-            <div class="overlay">Mode Guest (Tidak bisa diedit)</div>
-          {% endif %}
+        <article class="card">
+          <div class="card-header">
+            <p class="card-index">0{{ forloop.counter }}</p>
+            <div>
+              <h2>{{ biodata.nama_panggilan }}</h2>
+              <p class="card-fullname">{{ biodata.nama_panjang }}</p>
+            </div>
+          </div>
+
+          <dl class="card-details">
+            <div>
+              <dt>Tempat, Tanggal Lahir</dt>
+              <dd>{{ biodata.ttl }}</dd>
+            </div>
+            <div>
+              <dt>Domisili</dt>
+              <dd>{{ biodata.domisili }}</dd>
+            </div>
+          </dl>
         </article>
       {% endfor %}
     </section>

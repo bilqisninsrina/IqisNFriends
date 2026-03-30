@@ -1,0 +1,46 @@
+{% load static %}
+{% load socialaccount %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IqisNFriends</title>
+  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body style="--theme-color: {{ theme_color }};">
+  <nav class="navbar">
+    <div class="brand">IqisNFriends</div>
+    <div class="nav-right">
+      {% if user.is_authenticated %}
+        <form method="post" class="theme-form">
+          {% csrf_token %}
+          <label for="theme_color">Warna:</label>
+          <input id="theme_color" name="theme_color" type="color" value="{{ theme_color }}">
+          <button type="submit">Simpan</button>
+        </form>
+        <span class="user-name">{{ user.get_full_name|default:user.email|default:user.username }}</span>
+        <a href="{% url 'logout' %}" class="btn">Logout</a>
+      {% else %}
+        <a href="{% provider_login_url 'google' %}" class="btn">Login</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <main>
+    <section class="cards">
+      {% for biodata in biodata_list %}
+        <article class="card {% if not user.is_authenticated %}guest{% endif %}">
+          <p><strong>Nama Panjang:</strong> {{ biodata.nama_panjang }}</p>
+          <p><strong>Nama Panggilan:</strong> {{ biodata.nama_panggilan }}</p>
+          <p><strong>Tempat, Tanggal Lahir:</strong> {{ biodata.ttl }}</p>
+          <p><strong>Domisili:</strong> {{ biodata.domisili }}</p>
+          {% if not user.is_authenticated %}
+            <div class="overlay">Mode Guest (Tidak bisa diedit)</div>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </section>
+  </main>
+</body>
+</html>

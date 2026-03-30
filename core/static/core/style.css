@@ -1,0 +1,94 @@
+:root {
+  --theme-color: #f3f4f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--theme-color);
+  min-height: 100vh;
+}
+
+.navbar {
+  background: #111;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn,
+.theme-form button {
+  background: #fff;
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+main {
+  max-width: 960px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  min-height: 220px;
+  padding: 16px;
+  line-height: 1.5;
+}
+
+.card p {
+  margin: 0 0 10px;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  text-align: center;
+  padding: 12px;
+}
+
+.theme-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.user-name {
+  font-size: 0.9rem;
+}
